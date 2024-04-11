@@ -1,0 +1,339 @@
+<head>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">    
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@2.9.3/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  
+</head>
+
+
+
+<div class="box container justify-content-center" style="margin:auto; margin-top: 90px;">
+  <div class="bg-glass overlay"> </div>
+  <div class="content">
+    
+    <div id="form1" style="margin-left: 0; margin-right: 0;">
+      <div class="justify-content-center"><p class="h1 justify-content-center" style="margin:auto; color: white; font-family: Times New Roman, Times, serif; text-align: center;">Event Search</p></div>
+      
+      <form style="color:#42bcf5; width: 80%; margin: auto;" class="form" [formGroup]="myForm">
+        <hr>
+            <label for="inputAddress" class="form-label">Keyword</label>
+            <input id="ip" type="text" #keywordIP [(ngModel)]="keyw" (input)="IPsuggestion()" name="keyword" formControlName="key" class="form-control has-validation" id="keyword" style="width:100%;" required>
+            <div *ngIf="myForm.controls['key'].invalid && submitedForm">
+              <div *ngIf="myForm.controls['key'].errors?.['required']"><button type="button" class="btn btn-light" data-toggle="tooltip" data-placement="left" title="Tooltip on left" style="color:black">
+                Please fill out this field
+              </button></div>
+            </div>
+            
+            <ul *ngIf="sugg !== null && sugg !== undefined && sugg.length > 0" class="list-group" style="color:black;">
+              <li id="listsugg" *ngFor="let s of sugg" (click)="onclickList(s)" class="list-group-item text-dark">{{ s }}</li>
+            </ul>
+      <br>
+      <div class="table">
+        <div class="row">
+          <div class="col-sm-8">
+            <label for="distance" class="form-label">Distance</label>
+            <input type="number" name="distance" formControlName="dist"  class="form-control"  placeholder="10">
+          </div>
+          <div class="col-sm-4" >
+              <label for="Category"  class="form-label">Category</label><br>
+              <select  id="inputCateg" name="category" formControlName="categ" style="height:34px; color: black;">
+                <option selected class="categ">Default</option>
+                <option class="categ">Music</option>
+                <option class="categ">Sports</option>
+                <option class="categ">Art & Theatre</option>
+                <option class="categ">Film</option>
+                <option class="categ">Miscellaneous</option>
+              </select>
+            </div>
+        </div>
+         
+          <br>
+      
+          
+         
+              <label for="inputAddress2" class="form-label">Location</label>
+              <input type="text" id="location" name="location" formControlName="loc"  class="form-control" id="inputLocation"  style="width:100%;" #locIP>
+              <div *ngIf="myForm.controls['loc'].invalid && submitedForm">
+              <div *ngIf="myForm.controls['loc'].errors?.['required']"><button type="button" class="btn btn-light" data-toggle="tooltip" data-placement="left" title="Tooltip on left" style="color:black">
+                Please fill out this field
+              </button></div>
+              </div>
+
+          
+             <br>
+            
+          
+        
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="gridCheck" (change)="detloc($event)" [(ngModel)]="ischecked" #checkBx>
+              <label class="form-check-label" for="gridCheck">
+                &nbsp;Auto-detect your location
+              </label>
+            </div>
+        
+        <div style="margin:auto;" class="justify-content-center">
+        
+      
+        
+        </div>
+        <br>
+
+        <!-- <div class="row justify-content-md-center">
+          <div class="col-md-1"> -->
+            <!-- <input class="btn btn-primary mx-auto btn btn-danger" type="submit" value="Submit">
+          </div>
+          <div class="col-md-1">
+            <input class="btn btn-primary mx-auto" type="reset" value="Reset"> -->
+          <div class="row justify-content-md-center">
+            <div class="col text-center">
+          <button id= "search_btn" (click)="submitbtn()" name="button" class="btn btn-danger" style="margin: auto;  " >SEARCH</button> &nbsp;
+		      <button class="btn btn-primary" (click)="keywordIP.value=''; locIP.value=''; clearFunc(checkBx);">CLEAR</button>
+            </div>
+          <!-- </div> -->
+          <br><br>
+          </div>
+          </div>
+          
+        <!-- </div> -->
+                 
+      
+        
+      
+        </form>
+      </div>
+  </div>
+</div>
+
+<p *ngIf="table.length==0 && showTable"  style="background-color: white; color:red; border-radius: 0.5vw; font-size: 2vw; text-align: center; margin-top: 10%; margin-bottom:20%">No Records Found</p>
+
+<ng-container *ngIf="table.length!=0 && !selectedRow && showTable" #tableOP>
+<table  class="table table-striped table-dark text-light" style="margin-top:100px; text-align: center;background-color: #202529; color: white;border-radius:1vw;">
+  <thead >
+    <tr style="text-align: center;">
+      <th scope="col" style="text-align: center;">Date/Time</th>
+      <th scope="col" style="text-align: center;">Icon</th>
+      <th scope="col" style="text-align: center;">Event</th>
+      <th scope="col" style="text-align: center;">Genre</th>
+      <th scope="col" style="text-align: center;">Venue</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let e of table" (click)="clickedRow(e)">
+      <td>{{e.date}}<br> {{e.time}} </td>
+      <td><img src={{e.icon}} height="100" width="100"> </td>
+      <td>{{e.name}} </td>
+      <td>{{e.genre}} </td>
+      <td>{{e.venue}} </td>
+    </tr>
+    
+  </tbody>
+</table>
+</ng-container>
+
+
+<div *ngIf="selectedRow" class="event_card d-flex flex-column" style="margin-top:100px; height:90% ">
+  <!-- <div><button (click)="back()" class="bg-transparent"> &#9001; Back</button> -->
+    <div (click)="back()" style="font-size: 2vw; color: white;">
+    <span class="material-symbols-outlined" style="color:white" >
+      arrow_back_ios 
+      </span> Back</div>
+  <div style="font-size: 20px; color: white; margin-top: 100px;" class="text-center" > {{ item.name }} 
+    <button  style="height: 45px; width: 45px; border-radius: 45px;" [ngClass]="{'red': fav_toggle}" (click)="addToFavorites(item.id, item.name)"><span id="boot-icon" class="bi bi-heart" style="font-size: 20px; color: rgb(0, 0, 0);"></span></button></div> 
+  
+  
+  <nav class="navbar" style="color:aquamarine; background-color: aquamarine; margin-top: 30px; border-radius: 0; height: 40px;">
+    
+    <!-- <mat-tab-group mat-align-tabs="center" style=" -moz-column-rule-color: blue; column-rule-color: blue; column-rule-width: 50px; color: white;">
+    <mat-tab label="Event¸"  style="color:white; font-size: 30px;"> {{datetime}}</mat-tab>
+    <mat-tab label="Second"  style="color:white;"> Content 2 </mat-tab>
+    <mat-tab label="Third"  style="color:white;"> Content 3 </mat-tab>
+     -->
+
+     <mat-tab-group mat-align-tabs="center" style=" -moz-column-rule-color: blue; column-rule-color: blue; column-rule-width: 50px; color: white; background-color:rgba(255, 255, 255, 0.2); -webkit-backdrop-filter: blur(5px);backdrop-filter: blur(20px);">
+      <mat-tab label="Event"  style="color:white; "> <div *ngFor="let c of ec">
+        <div class="container table">
+          <div class="row justify-content-md-center text-center" style="width:100%;">
+            <div class="col-sm-4">
+              <td style="text-align:center; font-family: Arial, Helvetica, sans-serif;padding:20px;">
+                <li *ngIf="c.e_date!='NA'" style="font-size:2vw; list-style-type: none; color: #9afde4; ">Date</li><li *ngIf="c.e_date!='NA'" style="font-size:1.5vw; color: white; list-style-type: none;">{{c.e_date}} <br> {{c.e_time}}</li> <br>
+                <li *ngIf="c.e_artists!='NA'" style="font-size:2vw; list-style-type: none; color: #9afde4; ">Artist/Team</li><li *ngIf="c.e_artists!='NA'" style="font-size:1.5vw; color:white; text-decoration:none; list-style-type: none;"> {{ c.e_artists}}</li> <br>
+                <li *ngIf="c.e_venue!='NA'" style="font-size:2vw; list-style-type: none; color: #9afde4; ">Venue</li><li *ngIf="c.e_venue!='NA'" style="font-size:1.5vw; color:white; text-decoration:none; list-style-type: none;"> {{ c.e_venue}}</li> <br>
+                <li *ngIf="c.e_genre!='NA'" style="font-size:2vw; list-style-type: none; color: #9afde4; ">Genres</li><li *ngIf="c.e_genre!='NA'" style="font-size:1.5vw; color:white; text-decoration:none; list-style-type: none;"> {{ c.e_genre}}</li> <br>
+                <li *ngIf="c.price!='NA'" style="font-size:2vw; list-style-type: none; color: #9afde4; ">Price Ranges</li><li *ngIf="c.price!='NA'" style="font-size:1.5vw; color:white; text-decoration:none; list-style-type: none;"> {{ c.price}}</li> <br>
+
+
+
+
+
+                <div *ngIf="c.ts!='NA' && c.ts=='onsale'"> <li  style="font-size:2vw; list-style-type: none; color: #9afde4; ">Ticket Status</li><div  class="justify-content-center center-block text-center mx-auto" style="height: 2.5vw; width: 7vw; align-self: center; text-align: center; border-radius: 1vw; background-color: green;"> <li  style="font-size:1.5vw;  text-align: center;color:white; text-decoration:none; list-style-type: none;"> {{ c.ts}}</li> <br></div>        </div>
+                <div *ngIf="c.ts!='NA' && c.ts=='offsale'"> <li  style="font-size:2vw; list-style-type: none; color: #9afde4; ">Ticket Status</li><div class="justify-content-center center-block text-center mx-auto" style="height: 2.5vw; width: 7vw; align-self: center; text-align: center; border-radius: 1vw; background-color: red;"> <li  style="font-size:1.5vw; text-align: center; color:white; text-decoration:none; list-style-type: none;"> {{ c.ts}}</li> <br></div></div>
+                <div *ngIf="c.ts!='NA' && c.ts=='canceled'"> <li  style="font-size:2vw; list-style-type: none; color: #9afde4; ">Ticket Status</li><div class="justify-content-center center-block text-center mx-auto" style="height: 2.5vw; width: 7vw; align-self: center; text-align: center; border-radius: 1vw; background-color: black ;"> <li  style="font-size:1.5vw; text-align: center; color:white; text-decoration:none; list-style-type: none;"> {{ c.ts}}</li> <br></div></div>
+                <div *ngIf="c.ts!='NA' && c.ts=='postponed'"> <li  style="font-size:2vw; list-style-type: none; color: #9afde4; ">Ticket Status</li><div class="justify-content-center center-block text-center mx-auto" style="height: 2.5vw; width: 7vw; align-self: center; text-align: center; border-radius: 1vw; background-color: orange;"> <li  style="font-size:1.5vw; text-align: center; color:white; text-decoration:none; list-style-type: none;"> {{ c.ts}}</li> <br></div></div>
+                <div *ngIf="c.ts!='NA' && c.ts=='rescheduled'"> <li  style="font-size:2vw; list-style-type: none; color: #9afde4; ">Ticket Status</li><div class="justify-content-center center-block text-center mx-auto" style="height: 2.5vw; width: 7vw; align-self: center; text-align: center; border-radius: 1vw; background-color: orange;"> <li  style="font-size:1.5vw; text-align: center; color:white; text-decoration:none; list-style-type: none;"> {{ c.ts}}</li> <br></div></div>
+
+                
+                <li *ngIf="c.tm!='NA'" style="font-size:2vw; list-style-type: none; color: #9afde4; ">Buy Ticket At</li><a style="font-size:1.5vw;   color: #59c4fa;" href={{c.tl}} target="_blank"> Ticketmaster</a> <br></td>
+            </div>
+            <div class="col-sm-8 center justify-content-md-center justify-content-center ">
+              <!-- <td></td>
+              <div class="d-flex align-items-center"> -->
+              <td style="margin-top: 40px; display: flex; align-items: center; justify-content: center">
+                <img *ngIf="c.sm!='NA'" style="display: flex; align-items: center; justify-content: center" class="align-items-center align-middle" src={{c.sm}} height="70%" width="70%" style="margin-top: auto; margin-bottom: auto;">
+              </td>
+              <!-- </div> -->
+            </div>
+          </div>
+        </div>
+        <div class="row justify-content-md-center">
+          <div class="col text-center">
+            <!-- share functionality credits: stackoverflow -->
+            <span>Share on:</span> &nbsp;
+            <a class="fa fa-twitter bi-twitter" href="https://twitter.com/intent/tweet?text=Check {{c.e_name}} on Ticketmaster {{c.tm}}&hashtags=hashtag1,hashtag2" target="_blank"></a> &nbsp;
+            <a target="_blank" class="fa fa-facebook bi-facebook" href="https://www.facebook.com/sharer/sharer.php?u={{c.tm}}&amp;src=sdkpreparse"></a> 
+            
+            
+          </div>
+        </div>
+        </div></mat-tab>
+      <mat-tab label="Artist/Team"  style="color:white; width: 100%; height: 100%;"> 
+
+
+
+
+
+
+
+        <div id="spotify-carousel" class="carousel slide" data-bs-ride="carousel" *ngIf="music">
+          <div class="carousel-inner">
+            <div class="carousel-item" *ngFor="let s of spot; let index = index; let isFirst =first;" >
+             <!-- ***************** -->
+              <div class="table">
+                <div class="row">
+                  <div class="col-sm-3 w-25" style="padding-top: 15px;">
+                    <img class="center-block rounded-circle justify-content-md-center mx-auto" src={{s.a_img}} style="height:70%; width:70%; border-radius:70%;">
+                    <P style="font-size: 2vw; color: aquamarine; text-align: center; ">{{ s.a_name }} </P>
+                  </div>
+                  <div style="margin-top: 5%; text-align: center;">
+                    <div class="col-sm-3">
+                    <td style="padding:10px;"> 
+                      <P style="font-size: 2vw; color: aquamarine; text-align: center; ">Popularity </P><br>
+                      <div>
+                        <p style="font-size:1vw; text-align: center; margin: auto; transform:translate(0,150%);">{{ s.a_popularity }}</p>
+                        <mat-progress-spinner color="warn" style="margin:auto;  width:3vw; height:3vw;" value="{{ s.a_popularity }}" aria-label="LOADING" aria-describedby="progress-spinner-label"> <div style="position:relative; top: -60px; left: 30px; color:white;">{{ s.a_popularity }}</div> </mat-progress-spinner>
+                        
+                      </div>
+                    </td>
+                  </div>
+                  <div class="col-sm-3">
+                    <td style="padding:10px;">
+                      
+                      <P style="font-size: 2vw; color: aquamarine; text-align: center; ">Followers </P><br><br>
+                      {{ s.a_foll }}
+                    </td>
+                  </div>
+                  <div class="col-sm-3">
+                    <td style="padding:10px;">
+                      <P style="font-size: 2vw;color: aquamarine; text-align: center; ">Spotify Link </P><br>
+                      <a href="{{s.a_link}}" target="_blank"><i class="bi bi-spotify" style="font-size: 4vw; color: green;"> </i></a>
+                    </td>
+                  </div>
+                  </div>
+                </div>
+                <div class="row justify-content-md-center">
+                  <div class="col-sm-4" *ngFor="let a of s.alb">
+                    <img  src={{a}} style="height:100%; width:100%; padding:5px;"/>
+                  </div>
+                </div>
+              </div>
+              </div>
+            </div>
+          </div>
+
+          
+          <!-- <div style="width:100%; height:200%;"> -->
+          <p *ngIf="!music" class="text-center" style="background-color: white; color:red; border-radius: 0.5vw; font-size: 2vw; text-align: center; margin-bottom: 20%; margin-top:2vw;">No music related artist details to show</p>
+            <!-- </div> -->
+       
+      </mat-tab>
+
+      <mat-tab label="Venue"  style="color:white;"> 
+      <ng-container *ngFor="let v of ven">
+        <div class="table" style="margin-top: 30px; margin-left: auto; margin-right: auto; padding: 1vw;">
+          <div class="row justify-content-md-center">
+            <div class="col-sm-5 text-center">
+            <li *ngIf="f_name==1" style="font-size:2vw; list-style-type: none; color: #9afde4; ">Name</li><li style="font-size:1.5vw; color: white; list-style-type: none;">{{v.venname}}</li><br><br>
+            <li *ngIf="f_add==1" style="font-size:2vw; list-style-type: none; color: #9afde4; ">Address</li><li style="font-size:1.5vw; color: white; list-style-type: none;">{{v.venAddress}}</li><br><br>
+            <li *ngIf="f_phone==1" style="font-size:2vw; list-style-type: none; color: #9afde4; ">Phone Number</li><li style="font-size:1.5vw; color: white; list-style-type: none;">{{v.venPhone}}</li><br>
+            </div>
+
+            <div class="col-sm-7 text-center">
+              <div *ngIf="f_oh==1">
+              <li style="font-size:2vw; list-style-type: none; color: #9afde4; ">Open Hours</li><br>
+              <!-- credit for show more show less: https://stackblitz.com/edit/angular-ivy-jngvgd?file=tsconfig.json -->
+              <div class="text" style="font-size:12px; color: white;" [ngClass]="showMore1 ? 'expand' : 'collapse'"> 
+                <li style="font-size:1.5vw; color: white; list-style-type: none;">{{v.venHours}}<br></li>
+              </div>
+              <a (click)="showMore1 = !showMore1">{{showMore1 ? 'Show less &#8963;' : 'Show more &#8964;' }}</a>
+              </div><br><br>
+
+              <div *ngIf="f_gr==1">
+              <li style="font-size:2vw; list-style-type: none; color: #9afde4; ">General Rule</li>
+              <div class="text" [ngClass]="showMore2 ? 'expand' : 'collapse'">
+                <li style="font-size:1.5vw; color: white; list-style-type: none;">{{v.venGRules}}</li>
+              </div>
+              <a (click)="showMore2 = !showMore2">{{showMore2 ? 'Show less &#8963;' : 'Show more &#8964;'}}</a>
+              </div> <br><br>
+
+              <div *ngIf="f_cr==1">      
+              <li  style="font-size:2vw; list-style-type: none; color: #9afde4; ">Child Rule</li>
+              <div class="text" [ngClass]="showMore3 ? 'expand' : 'collapse'">
+                <li style="font-size:1.5vw; color: white; list-style-type: none;">{{v.venCRules}}</li>
+              </div>
+              <a (click)="showMore3 = !showMore3">{{showMore3 ? 'Show less &#8963;' : 'Show more &#8964;'}}</a>
+              </div><br>
+            </div>
+          </div>
+          <div class="row justify-content-md-center text-center">
+            <button class="btn btn-danger" (click)="showGM(v.venname) ; showGmaps()" data-bs-toggle="modal" >Open Venue on Google Maps</button>
+            
+            <!-- <button type="button" class="btn btn-danger" (click)="showGM(v.ven); showGmaps()">Open Venue in Google Maps</button> -->
+            
+
+            
+            
+              
+            
+           
+          </div>
+        </div>
+      </ng-container>
+      
+      </mat-tab>
+
+  </mat-tab-group>
+</nav>
+  
+
+</div>
+
+
+<div class="modal " tabindex="-1" role="dialog"  [ngStyle]="{'display':display}">
+  <div class="modal-dialog" role="document">
+   <div class="modal-content">
+              <div class="modal-header"><h4 class="modal-title">Event Venue</h4></div>
+         <div class="modal-body">
+           <div class="my-google-map" >
+             <google-map [options]="options" >
+               <map-marker [position]="marker.position"></map-marker>
+             </google-map>
+           </div>
+                  </div>
+              <div class="modal-footer text-left">
+                    <button type="button" class="btn btn-dark text-left " style="background-color: black; color: white;" (click)="closeGmaps()" >Close</button>
+                  </div>
+     </div>
+      </div>
+</div>
+
+

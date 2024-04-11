@@ -1,0 +1,32 @@
+
+.active {
+    border-color: white;
+    border: 2px solid white;
+    border-radius: 10px;
+    background-color: black;
+}
+html{
+    margin:auto;
+    background-image: url('background.jpg');
+    background-attachment: fixed;
+    min-height : 100%;
+    min-width : 100%;
+    background-repeat: no-repeat;
+    background-position: center center;
+    overflow-x: hidden;
+    background-size: cover;
+    font-size: 20px;
+    /* background-image: '571/helloworld/my-dream-app/src/background.jpg';
+    background-size: contain;
+background-position: center; */
+
+}
+
+.nav{
+    border:0px;
+    
+}
+.nav-tabs > li.active > a:hover {
+    background-color: black;
+}
+

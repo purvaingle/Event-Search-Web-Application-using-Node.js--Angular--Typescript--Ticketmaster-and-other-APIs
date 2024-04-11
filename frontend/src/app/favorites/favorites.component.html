@@ -1,0 +1,39 @@
+
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+</head>
+<ng-container *ngIf="favitems.length!=0" #favOP>
+    <p class="text-center" style="font-size:2.5vw; color: #9afde4; margin-left: auto; text-align: center; margin-top: 20%;">  List of your favorite events</p>
+    <table  class="table  table-light text-dark" style="margin-top:; text-align: center;background-color: white; color:black;border-radius:1vw;">
+      <thead >
+        <tr style="text-align: center;">
+          <th scope="col" style="text-align: center;">#</th>
+          <th scope="col" style="text-align: center; color: black;">Date</th>
+          <th scope="col" style="text-align: center; color: black;">Event</th>
+          <th scope="col" style="text-align: center; color: black;">Category</th>
+          <th scope="col" style="text-align: center; color: black;">Venue</th>
+          <th scope="col" style="text-align: center; color: black;">Favorite</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let f of favitems; let i=index;" >
+            <td style="color:black;">{{i+1}}</td>
+          <td style="color:black;">{{f.date}} </td>
+          <td style="color:black;">{{f.fav_name}} </td>
+          <td style="color:black;">{{f.fav_gen}} </td>
+          <td style="color:black;" >{{f.fav_venue}} </td>
+          <td><span class="material-symbols-outlined" (click)="deleteItem(f.id)">
+            delete
+            </span> </td>
+        </tr>
+        
+      </tbody>
+    </table>
+    </ng-container>
+
+    <!-- <ng-container > -->
+
+        <p class="text-center" *ngIf="favitems.length==0" style="background-color: white; color:red; border-radius: 0.5vw; font-size: 2vw; text-align: center; margin-top: 20%;" >No favorite events to show </p>
+
+
+   
